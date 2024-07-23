@@ -1,34 +1,16 @@
 import React, { useState } from "react";
-import { MdDelete } from "react-icons/md";
-import "./App.css";
+
+import NewTodo from "./componets/NewTodo";
+import TodoList from "./componets/TodoList";
+
 
 const App = () => {
-    const ESCAPE_KEY = 27;
-    const ENTER_KEY = 13;
 
     const [todos, setTodos] = useState([]);
-    const [value, setValue] = useState("");
 
-    const onChange = (event) => {
-        setValue(event.target.value);
-    }
-
-    const erase = () => {
-        setValue('');
-    }
-
-    const submit = () => {
+    const onNewTodo = (value) =>{
         setTodos([...todos, { id: new Date().getTime, title: value, checked: false}]);
-        erase();
     }
-
-    const onKeyDown = (event) => {
-        if (event.which === ENTER_KEY) {
-            submit();
-        } else if(event.which === ESCAPE_KEY){
-            erase();
-        }
-    };
 
     const onToggle = (todo) => {
         setTodos(todos.map((obj) => (obj.id === todo.id ? {...obj, checked: !todo.checked} : obj)));
@@ -44,15 +26,8 @@ const App = () => {
                 <h1 className="princ">todo</h1>
             </header>
             <section className="main">
-                <input className="newtodo" placeholder="o que precisa ser feito?" value={value} onChange={onChange} onKeyDown={onKeyDown} />
-                <ul className="todolist">
-                    {todos.map((todo) => (
-                        <li key={todo.id}>
-                            <span onClick={() => onToggle(todo)} role="button" tabIndex={0} className={['todo', todo.checked ? 'checked' : ''].join(' ')}>{todo.title}</span>
-                            <button onClick={() => onRemove(todo)}  className="remove" type="button"><MdDelete  size={28} /></button>
-                        </li>
-                    ))}
-                </ul>
+                <NewTodo onNewTodo={onNewTodo} />
+                <TodoList todos={todos} onToggle={onToggle} onRemove={onRemove} />
             </section>
         </section>
     );
